@@ -49,7 +49,7 @@ class Route {
 				return false; break;
 			// Путь ошибки модерации
 			case("/moderation_err"):
-				return route.get_page("public/spa/pages/err/moderation.html", "moderation_err");
+				route.get_page("public/spa/pages/err/moderation.html", "moderation_err");
 				return false; break;
 			// Если пространство имён ничего не обнаружило
 			default:
@@ -93,27 +93,27 @@ class Route {
 	}
 
 	// Метод для подключения отдельных небольших файлов к странице
-	attach_module(path, div_id) {
+	attach_module(path, id_element) {
 		// AJAX запрос
 		$.ajax({
 			url: path, // путь
 			success: function(data) {
 				// Если всё плохо и путь неправилен
 				if(data.includes("<!DOCTYPE html>"))  {
-					return $("#" + div_id).html(`
+					return $("#" + id_element).html(`
 						<h1>Ошибка 404</h1>
 						<h3>Такого файла нет</h3>
 					`);
 				}
 				// Загрузка данных в нужный блок
-				$("#" + div_id).html(data);
+				$("#" + id_element).html(data);
 			}
 		});
 	}
 
 	// Метод очищения модулей
-	clear_module(div_id) {
-		$("#" + div_id).html("");
+	clear_module(id_element) {
+		$("#" + id_element).html("");
 	}
 
 	// Метод с AJAX запросом для отправки данных методом get
@@ -175,7 +175,4 @@ let route = new Route;
 $(function() {
 	// Вызов функции проверки текущего пути
 	route.check_pathname();
-	// Пример использования
-	// route.redirect('index');
-	// route.attach_module('public/spa/pages/test.html', 'slider');
 });
