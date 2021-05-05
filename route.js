@@ -7,10 +7,16 @@ class Route {
 		window.history.pushState('route', '', '/');
 	}
 
-	// Мето проверки адресной строки при загрузке страницы
+	// Метод проверки адресной строки при загрузке страницы
 	check_pathname() {
 		// Получение текущего пути
 		let pathname = location.pathname;
+
+		// Проверка пространства имён
+		let check_namespace = route.check_pathname_namespace(pathname);
+		// Если проверка обнаружила занятые имена, то прерывание исполнения дальнейшего кода
+		if(!check_namespace) return;
+
 		// Если мы не на главной странице
 		if(pathname != "/") {
 			// Переменная передаваемого пути
@@ -31,13 +37,28 @@ class Route {
 		}
 	}
 
+	// Проверка заготовленных имён путей
+	check_pathname_namespace(pathname) {
+		// Проверка пространства имён
+		switch(pathname) {
+			// Путь ошибки авторизации
+			case("/auth_err"):
+				route.get_page("public/spa/pages/err/auth.html", "auth_err");
+				return false; break;
+			// Путь ошибки модерации
+			case("/moderation_err"):
+				return route.get_page("public/spa/pages/err/moderation.html", "moderation_err");
+				return false; break;
+			// Если пространство имён ничего не обнаружило
+			default:
+				return true; break;
+		}
+	}
+
 	// Метод перенаправления на нужный маршрут
 	redirect(page, id) {
 		// Путь до страницы
 		let path = "public/spa/pages/" + page + ".html";
-
-		// Вызов функции проверки существования файла
-		// this.check_page(path);
 
 		// Название url строки
 		let url = "/" + page;
@@ -47,7 +68,7 @@ class Route {
 		// Если переходим на главную страницу
 		if(page == "index") url = "/";
 
-		// Вызов метода перенправления на нужную страницу
+		// Вызов метода перенаправления на нужную страницу
 		this.get_page(path, url);
 	}
 
@@ -56,7 +77,7 @@ class Route {
 	get_page(path, url) {
 		// Изменение маршрута адресной строки
 		window.history.replaceState('route', '', url);
-
+		
 		// AJAX запрос
 		$.ajax({
 			url: path, // путь
@@ -71,23 +92,26 @@ class Route {
 
 	// Метод для подключения отдельных небольших файлов к странице
 	attach_module(path, div_id) {
-		// Вызов функции проверки существования файла модуля
-		this.check_module(path, div_id);
 		// AJAX запрос
 		$.ajax({
 			url: path, // путь
 			success: function(data) {
 				// Если всё плохо и путь неправилен
 				if(data.includes("<!DOCTYPE html>"))  {
-					$("#" + div_id).html(`
+					return $("#" + div_id).html(`
 						<h1>Ошибка 404</h1>
 						<h3>Такого файла нет</h3>
 					`);
 				}
 				// Загрузка данных в нужный блок
-				$("#"+ div_id).html(data);
+				$("#" + div_id).html(data);
 			}
 		});
+	}
+
+	// Метод очищения модулей
+	clear_module(div_id) {
+		$("#" + div_id).html("");
 	}
 
 	// Метод с AJAX запросом для отправки данных методом get
@@ -148,5 +172,8 @@ let route = new Route;
 // Код срабатывает при загрузке страницы
 $(function() {
 	// Вызов функции проверки текущего пути
-	route.check_pathname()
+	route.check_pathname();
+	// Пример использования
+	// route.redirect('index');
+	// route.attach_module('public/spa/pages/test.html', 'slider');
 });
