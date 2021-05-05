@@ -4,13 +4,15 @@ class Route {
 	// Метод инициализации класса
 	counstruct() {
 		// Находимся на главной странице
-		window.history.pushState('route', '', '/');
+		window.history.pushState(null, null, '/');
 	}
 
 	// Метод проверки адресной строки при загрузке страницы
 	check_pathname() {
 		// Получение текущего пути
 		let pathname = location.pathname;
+		// Если путь заканчивается на /, то мы его удаляем
+		if(pathname[pathname.length-1] == "/" && pathname.length > 1) pathname = pathname.replace(/.$/,"");
 
 		// Проверка пространства имён
 		let check_namespace = route.check_pathname_namespace(pathname);
@@ -76,8 +78,8 @@ class Route {
 	// без перезагрузки страницы
 	get_page(path, url) {
 		// Изменение маршрута адресной строки
-		window.history.replaceState('route', '', url);
-		
+		window.history.replaceState(null, null, url);
+
 		// AJAX запрос
 		$.ajax({
 			url: path, // путь
