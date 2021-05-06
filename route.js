@@ -2,9 +2,9 @@
 class Route {
 
 	// Метод инициализации класса
-	counstruct() {
+	constructor() {
 		// Находимся на главной странице
-		window.history.pushState(null, null, '/');
+		// window.history.pushState(null, null, '/');
 	}
 
 	// Метод проверки адресной строки при загрузке страницы
@@ -93,78 +93,27 @@ class Route {
 	}
 
 	// Метод для подключения отдельных небольших файлов к странице
-	attach_module(path, id_element) {
+	attach_module(path, element_id) {
 		// AJAX запрос
 		$.ajax({
 			url: path, // путь
 			success: function(data) {
 				// Если всё плохо и путь неправилен
 				if(data.includes("<!DOCTYPE html>"))  {
-					return $("#" + id_element).html(`
+					return $("#" + element_id).html(`
 						<h1>Ошибка 404</h1>
 						<h3>Такого файла нет</h3>
 					`);
 				}
 				// Загрузка данных в нужный блок
-				$("#" + id_element).html(data);
+				$("#" + element_id).html(data);
 			}
 		});
 	}
 
 	// Метод очищения модулей
-	clear_module(id_element) {
-		$("#" + id_element).html("");
-	}
-
-	// Метод с AJAX запросом для отправки данных методом get
-	get(data, path) {
-		// AJAX запрос
-		$.ajax({
-			url: path, // путь
-			method: "GET", // метод
-			contentType: "application/json", // тип данных
-			data: data, // отправленные данные
-			// В случае успеха
-			success: function(data) {
-				// Возвращение данных
-				return data;
-			},
-			// В случае неудачи
-			error: function(jqXHR) {
-				// Возвращение данных
-				return jqXHR;
-			}
-		});
-	}
-
-	// Метод с AJAX запросом для отправки данных методом post
-	post(data, path) {
-		// AJAXSetup
-		$.ajaxSetup({
-			// Заголовки
-			headers: {
-				// Токен
-				"X-CSRF-TOKEN": $("meta[meta='_token']").attr("content")
-			}
-		});
-
-		// AJAX запрос
-		$.ajax({
-			url: path, // путь
-			method: "POST", // метод
-			contentType: "application/json", // тип данных
-			data: data, // данные
-			// В случае успеха
-			success: function(data) {
-				// Возвращение данных
-				return data;
-			},
-			// В случае неудачи
-			error: function(jqXHR) {
-				// Возвращение данных
-				return jqXHR;
-			}
-		});
+	clear_module(element_id) {
+		$("#" + element_id).html("");
 	}
 }
 
