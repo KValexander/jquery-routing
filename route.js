@@ -2,9 +2,10 @@
 class Route {
 
 	// Метод инициализации класса
-	constructor() {
-		// Находимся на главной странице
-		// window.history.pushState(null, null, '/');
+	constructor(path_to_file, expansion) {
+		// Путь до папки с фалами и расширение файлов
+		this.path_to_file = path_to_file;
+		this.expansion = expansion;
 	}
 
 	// Метод проверки адресной строки при загрузке страницы
@@ -60,7 +61,7 @@ class Route {
 	// Метод перенаправления на нужный маршрут
 	redirect(page, id) {
 		// Путь до страницы
-		let path = "public/spa/pages/" + page + ".html";
+		let path = this.path_to_file + page + "." + this.expansion;
 
 		// Название url строки
 		let url = "/" + page;
@@ -118,7 +119,7 @@ class Route {
 }
 
 // Создание экземпляра класса
-let route = new Route;
+let route = new Route("public/spa/pages/", "html");
 
 // Код срабатывает при загрузке страницы
 $(function() {
