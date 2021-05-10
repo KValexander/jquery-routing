@@ -24,13 +24,19 @@ class Route {
 		if(pathname != "/") {
 			// Переменная передаваемого пути
 			let path = "";
+			// Если путь содержит "-"
+			if(pathname.includes("-"))
+				// Убираем "/"
+				pathname = pathname.substr(1);
 			// Находим название нашего пути
-			pathname = pathname.split("/");
+			pathname = pathname.split("-");
 			// Прогон всех элементов пути
-			for (let i = 1; i < pathname.length; i++) {
-				if(pathname.length == 2) path = pathname[i];
+			for (let i = 0; i < pathname.length; i++) {
+				if(pathname.length == 1) path = pathname[i];
 				else path += "/" + pathname[i];
 			}
+			// Убираем "/"
+			path = path.substr(1);
 			// Переходим на страницу нашего пути
 			this.redirect(path);
 		// Если на главной
@@ -78,8 +84,16 @@ class Route {
 	// Получение страницы с изменением адресной строки
 	// без перезагрузки страницы
 	get_page(path, url) {
+		// Замена всех "/" на "-" кроме первого
+		// с "/" помимо первой history api корректно не работает
+		url = url.replace(/\//g,(i => m => !i++ ? m : '-')(0));
+
+		console.log("===============================");
+		console.log("page: " + path);
+		console.log("url: " + url);
+
 		// Изменение маршрута адресной строки
-		window.history.replaceState(null, null, url);
+		window.history.pushState(null, null, url); // history api
 
 		// AJAX запрос
 		$.ajax({
@@ -95,6 +109,7 @@ class Route {
 
 	// Метод для подключения отдельных небольших файлов к странице
 	attach_module(path, element_id) {
+		console.log("module: " + path);
 		// AJAX запрос
 		$.ajax({
 			url: path, // путь
