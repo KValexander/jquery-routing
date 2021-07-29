@@ -1,10 +1,9 @@
-# jquery_routing
-Class for SPA routing in jquery for laravel
+# jquery-routing
+Object for SPA routing in jquery
 
-route - variable with an instance of the class
+route - object variable
 
 Methods:
 * route.redirect(htmlfilename) - method for getting a file at a specific path and output to the page;
-specific path  - "public/spa/pages/" + htmlfilename + ".html"
 * route.attach_module(htmlfilename, elementid) - method for getting a file at a specific and outputting it to a specific div;
 
